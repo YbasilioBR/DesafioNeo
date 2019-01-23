@@ -54,29 +54,38 @@ $output = array_slice($objTickets, ($pagina*$pages)-5, $pages);
 <table class="table table-dark" id="tableDados">
   <thead>
     <tr>
-      <th scope="col">ID</th>
-      <th scope="col">ID Categoria</th>
-      <th scope="col">ID Cliente</th>
-      <th scope="col">Cliente</th>
-      <th scope="col">Email</th>
-      <th scope="col">Data</th>
-      <th scope="col">Data Atualização</th>
-      <th scope="col">Prioridade</th>
-      <th scope="col">Interações</th>
+      <th style="text-align:center">ID</th>
+      <th style="text-align:center">ID Categoria</th>
+      <th style="text-align:center">ID Cliente</th>
+      <th style="text-align:center">Cliente</th>
+      <th style="text-align:center">Email</th>
+      <th style="text-align:center" >Data 
+        <a href=""><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
+        <a href=""><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
+      </th>
+      <th style="text-align:center" >Data Atualização 
+        <a href=""><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
+        <a href=""><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
+      </th>
+      <th style="text-align:center">Prioridade 
+        <a href=""><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
+        <a href=""><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
+      </th>
+      <th style="text-align:center">Interações</th>
     </tr>
   </thead>
   <tbody>
   <?php foreach ($output as $ticket) { ?>
     <tr>
-      <th scope="row"><?php echo($ticket->TicketID); ?></th>      
-      <td><?php echo($ticket->CategoryID); ?></td>
-      <td><?php echo($ticket->CustomerID); ?></td>
-      <td><?php echo($ticket->CustomerName); ?></td> 
-      <td><?php echo($ticket->CustomerEmail); ?></td>
-      <td><?php echo(date('d/m/Y', strtotime($ticket->DateCreate))); ?></td>
-      <td><?php echo(date('d/m/Y', strtotime($ticket->DateUpdate))); ?></td>
-      <td><?php echo($ticket->Ranking); ?></td> 
-      <td>X</td>
+      <th style="text-align:center"><?php echo($ticket->TicketID); ?></th>      
+      <td style="text-align:center"><?php echo($ticket->CategoryID); ?></td>
+      <td style="text-align:center"><?php echo($ticket->CustomerID); ?></td>
+      <td style="text-align:center"><?php echo($ticket->CustomerName); ?></td> 
+      <td style="text-align:center"><?php echo($ticket->CustomerEmail); ?></td>
+      <td style="text-align:center"><?php echo(date('d/m/Y', strtotime($ticket->DateCreate))); ?></td>
+      <td style="text-align:center"><?php echo(date('d/m/Y', strtotime($ticket->DateUpdate))); ?></td>
+      <td style="text-align:center"><?php echo($ticket->Ranking); ?></td> 
+      <td style="text-align:center">X</td>
     </tr>
 
     <?php } ?>
