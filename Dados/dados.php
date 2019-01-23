@@ -22,3 +22,36 @@ function AtualizaDados(array $newTickets)
 
         fclose($atualiza);
 }
+
+function OrderBy($array,$key,$ascdesc) {
+	
+	foreach($array as $k=>$v) {
+	   $b[] = $v[$key];
+	}
+        
+        if($ascdesc == 'asc'){
+           asort($b);
+        }else{
+           arsort($b);
+        }
+	
+	foreach($b as $k=>$v) {
+           $c[] = $array[$k];
+	}
+	
+        return $c;
+        
+}
+
+function objectToArray($d) {
+        if (is_object($d)) {
+            $d = get_object_vars($d);
+        }
+		
+        if (is_array($d)) {  
+            return array_map(__FUNCTION__, $d);
+        }
+        else {       
+            return $d;
+        }
+}

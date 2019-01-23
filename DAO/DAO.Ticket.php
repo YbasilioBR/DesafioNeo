@@ -4,24 +4,45 @@ include "..\Classes\Class.Ticket.php";
 require_once "..\Dados\dados.php";
 
 interface ITicket{
-    public function GetTickets();
+    public function GetTickets($order);
     public function UpdateTickets();
 }
 
 class TicketDAO implements ITicket 
 {
-    function GetTickets()
+    function GetTickets($order)
     {
 
         $tickets = AcessaBase();
-        $objTickets[] = new Ticket();
 
-        for ($i = 0; $i < count($tickets); $i++) {
-
-            $objTickets[$i] = $tickets[$i];
+        if($order !== ""){
+            $Arrtickets = OrderBy(objectToArray($tickets),'Ranking',$order);
+        }else{
+            $Arrtickets = objectToArray($tickets);
         }
+       
 
-        return ($objTickets);
+        $objTickets[] = new Ticket();        
+        $i = 0;
+
+        foreach ($Arrtickets as $value) {
+         
+            $objTicket = new Ticket();
+            $objTicket->TicketID        = $value['TicketID'];
+            $objTicket->CategoryID      = $value['CategoryID'];
+            $objTicket->CustomerID      = $value['CustomerID'];
+            $objTicket->CustomerName    = $value['CustomerName'];
+            $objTicket->CustomerEmail   = $value['CustomerEmail'];
+            $objTicket->DateCreate      = $value['DateCreate'];
+            $objTicket->DateUpdate      = $value['DateUpdate'];
+            $objTicket->Interactions    = $value['Interactions'];
+            $objTicket->Ranking         = $value['Ranking'];
+
+            $objTickets[$i] = $objTicket;
+            $i++;
+        }
+        
+       return($objTickets);
 
     }
 
@@ -84,8 +105,4 @@ class TicketDAO implements ITicket
         AtualizaDados($objTickets);
 
     }
-
-
-    
-
 }
