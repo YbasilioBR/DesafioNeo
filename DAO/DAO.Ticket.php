@@ -4,19 +4,19 @@ include "..\Classes\Class.Ticket.php";
 require_once "..\Dados\dados.php";
 
 interface ITicket{
-    public function GetTickets($order);
+    public function GetTickets($campoOrder,$order);
     public function UpdateTickets();
 }
 
 class TicketDAO implements ITicket 
 {
-    function GetTickets($order)
+    function GetTickets($campoOrder,$order)
     {
 
         $tickets = AcessaBase();
 
-        if($order !== ""){
-            $Arrtickets = OrderBy(objectToArray($tickets),'Ranking',$order);
+        if($campoOrder !== ""){
+            $Arrtickets = OrderBy(objectToArray($tickets),$campoOrder,$order);
         }else{
             $Arrtickets = objectToArray($tickets);
         }

@@ -31,7 +31,7 @@ function OrderBy($array,$key,$ascdesc) {
         
         if($ascdesc == 'asc'){
            asort($b);
-        }else{
+        }else if($ascdesc == 'desc'){
            arsort($b);
         }
 	

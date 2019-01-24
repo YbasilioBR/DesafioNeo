@@ -2,7 +2,9 @@
 require_once "..\DAO\DAO.Ticket.php";
 
 $pagina = 1;
+$paginacao = 25;
 $order = "";
+$campoOrder = "";
 
 if (isset($_GET["pagina"])) {
   $pagina = $_GET["pagina"];
@@ -12,14 +14,22 @@ if (isset($_GET["order"])) {
   $order = $_GET["order"];
 }
 
+if (isset($_GET["campoOrder"])) {
+  $campoOrder = $_GET["campoOrder"];
+}
+
+if (isset($_GET["campoOrder"])) {
+  $campoOrder = $_GET["campoOrder"];
+}
+
 $objDao = new TicketDAO();
 $objTickets = new Ticket();
 
 $objDao->UpdateTickets();
-$objTickets = $objDao->GetTickets($order);
-$pages = count($objTickets)/5;
+$objTickets = $objDao->GetTickets($campoOrder,$order);
+$pages = count($objTickets)/$paginacao;
 
-$output = array_slice($objTickets, ($pagina*$pages)-5, $pages);
+$output = array_slice($objTickets, ($pagina-1) * 5, $paginacao);
 
 ?>
 
@@ -43,15 +53,15 @@ $output = array_slice($objTickets, ($pagina*$pages)-5, $pages);
 
   </head>
 
-  <body style="padding-top: 50px;">
+  <body style="padding-top: 75px;margin-left: 25px;margin-right: 25px;background-color: black;">
 
-    <nav class="navbar fixed-top navbar-light bg-light">
+    <nav class="navbar fixed-top navbar-light bg-light" style="margin-left: 25px;margin-right: 25px;">
         <a class="navbar-brand" href="#">Tickets for answer</a>
     </nav>  
 
     <div>
 
-<table class="table table-dark" id="tableDados">
+<table class="table table-light" id="tableDados">
   <thead>
     <tr>
       <th style="text-align:center">ID</th>
@@ -59,17 +69,17 @@ $output = array_slice($objTickets, ($pagina*$pages)-5, $pages);
       <th style="text-align:center">ID Cliente</th>
       <th style="text-align:center">Cliente</th>
       <th style="text-align:center">Email</th>
-      <th style="text-align:center" >Data 
-        <a href=""><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
-        <a href=""><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
+      <th style="text-align:center" >Data Criação
+        <a href="Principal.php?campoOrder=DateCreate&order=desc"><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
+        <a href="Principal.php?campoOrder=DateCreate&order=asc"><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
       </th>
       <th style="text-align:center" >Data Atualização 
-        <a href=""><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
-        <a href=""><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
+        <a href="Principal.php?campoOrder=DateUpdate&order=desc"><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
+        <a href="Principal.php?campoOrder=DateUpdate&order=asc"><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
       </th>
       <th style="text-align:center">Prioridade 
-        <a href=""><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
-        <a href=""><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
+        <a href="Principal.php?campoOrder=Ranking&order=asc"><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
+        <a href="Principal.php?campoOrder=Ranking&order=desc"><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
       </th>
       <th style="text-align:center">Interações</th>
     </tr>
@@ -85,21 +95,37 @@ $output = array_slice($objTickets, ($pagina*$pages)-5, $pages);
       <td style="text-align:center"><?php echo(date('d/m/Y', strtotime($ticket->DateCreate))); ?></td>
       <td style="text-align:center"><?php echo(date('d/m/Y', strtotime($ticket->DateUpdate))); ?></td>
       <td style="text-align:center"><?php echo($ticket->Ranking); ?></td> 
-      <td style="text-align:center">X</td>
+      <td style="text-align:center"><?php echo(count($ticket->Interactions)); ?></td>
     </tr>
 
     <?php } ?>
   </tbody>
-
-
 </table>
-<ul class="pagination">
-  <?php for ($p = 1; $p <= $pages; $p++){?>
-    <li class="page-item"><a class="page-link" href="Principal.php?pagina=<?php echo($p);?>"> <?php echo($p);?> </a></li>
-  <?php }?>
-  </ul>
 </div>
 
-  </body>
+<div class="row">
+<div class="col-md-1">
+
+    <select class="form-control" id="paginas">
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="15">15</option>
+      <option value="20">20</option>
+      <option value="25">25</option>
+    </select>
+
+  </div>
+  <div class="col">
+    <ul class="pagination">
+      <li class="page-item"><a class="page-link" href="Principal.php?pagina=<?php echo($pagina-1 > 0 ? $pagina-1 : 1);?>"><<</a></li>
+        <?php for ($p = 1; $p <= $pages; $p++){?>
+          <li class="page-item"><a class="page-link" href="Principal.php?pagina=<?php echo($p);?>"> <?php echo($p);?> </a></li>
+        <?php }?>
+      <li class="page-item"><a class="page-link" href="Principal.php?pagina=<?php echo($pagina+1 > $pages ? $pages : $pagina+1);?>">>></a></li>
+    </ul>
+  </div>
+</div>
+
+</body>
 
 </html>
