@@ -1,49 +1,45 @@
 <?php
 require_once "..\DAO\DAO.Ticket.php";
 
-$pagina = 1;
-$dados = array();
-$dados[0] = 0;
-$paginacao = 0;
-$order = "";
-$campoOrder = "";
-$numPaginas = 0;
+$pagina = 1; // Variavel de contagem de paginas para os itens
+$dados = array(); //array para dados, cada posição de acordo com a pagina é uma posição inicial para o array_slice
+$dados[0] = 0; //Inicia array com a posição 0 valendo 0
+$ItensPorPagina = 0; //Variavel para o numero de itens por pagina
+$order = ""; //Variavel para receber o tipo de ordenação Asc ou desc
+$campoOrder = ""; //Campo que será baseada a ordenação
+$numPaginas = 0; //Vriavel para o numero de paginas para os itens
 
-if (isset($_GET["pagina"])) {
+if (isset($_GET["pagina"])) { //Se receber um get para paginas, atribui a variavel
   $pagina = $_GET["pagina"];
 }
 
-if (isset($_GET["order"])) {
+if (isset($_GET["order"])) { //Se receber um get para order, atribui a variavel
   $order = $_GET["order"];
 }
 
-if (isset($_GET["campoOrder"])) {
+if (isset($_GET["campoOrder"])) { //Se receber um get para campoOrder, atribui a variavel
   $campoOrder = $_GET["campoOrder"];
 }
 
-if (isset($_GET["campoOrder"])) {
-  $campoOrder = $_GET["campoOrder"];
-}
-
-if (isset($_GET["paginacao"])) {
-  $paginacao = $_GET["paginacao"];
+if (isset($_GET["ItensPorPagina"])) { //Se receber um get para ItensPorPagina, atribui a variavel, senão deixa o padrão que é o tamanho do array
+  $ItensPorPagina = $_GET["ItensPorPagina"];
 }else{
-  $paginacao = 25;
+  $ItensPorPagina = 25;
 }
 
-$objDao = new TicketDAO();
-$objTickets = new Ticket();
+$objDao = new TicketDAO(); //Objeto da classe dao tickets
+$objTickets = new Ticket(); //Objeto da classe tickets
 
-$objDao->UpdateTickets();
-$objTickets = $objDao->GetTickets($campoOrder,$order);
+$objDao->UpdateTickets(); //Classifica a prioridade dos tickets
+$objTickets = $objDao->GetTickets($campoOrder,$order); //o objeto tickets recebe os dados dos tickets
 
-while($itens < count($objTickets)){
-    $itens += $paginacao;
-    $numPaginas += 1;
-    $dados[$numPaginas] = $itens;
+while($itens < count($objTickets)){ //enquanto itens for menor que a quantidade dos tickets
+    $itens += $ItensPorPagina; //Recebe a quantidade de itens por pagina definido no combo box
+    $numPaginas += 1; //Aumenta o numero de paginas por quantidade de itens
+    $dados[$numPaginas] = $itens; //Implementa a quantidade para a pagina no array
 }
 
-$output = array_slice($objTickets, $dados[$pagina-1] , $paginacao);
+$output = array_slice($objTickets, $dados[$pagina-1] , $ItensPorPagina); //Outpur recebe o intervalo de array que foi definido por pagina
 
 ?>
 
@@ -84,22 +80,22 @@ $output = array_slice($objTickets, $dados[$pagina-1] , $paginacao);
       <th style="text-align:center">Cliente</th>
       <th style="text-align:center">Email</th>
       <th style="text-align:center" >Data Criação
-        <a href="Principal.php?campoOrder=DateCreate&order=desc&paginacao=<?php echo($paginacao);?>"><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
-        <a href="Principal.php?campoOrder=DateCreate&order=asc&paginacao=<?php echo($paginacao);?>"><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
+        <a href="Principal.php?campoOrder=DateCreate&order=desc&ItensPorPagina=<?php echo($ItensPorPagina);?>"><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
+        <a href="Principal.php?campoOrder=DateCreate&order=asc&ItensPorPagina=<?php echo($ItensPorPagina);?>"><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
       </th>
       <th style="text-align:center" >Data Atualização 
-        <a href="Principal.php?campoOrder=DateUpdate&order=desc&paginacao=<?php echo($paginacao);?>"><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
-        <a href="Principal.php?campoOrder=DateUpdate&order=asc&paginacao=<?php echo($paginacao);?>"><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
+        <a href="Principal.php?campoOrder=DateUpdate&order=desc&ItensPorPagina=<?php echo($ItensPorPagina);?>"><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
+        <a href="Principal.php?campoOrder=DateUpdate&order=asc&ItensPorPagina=<?php echo($ItensPorPagina);?>"><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
       </th>
       <th style="text-align:center">Prioridade 
-        <a href="Principal.php?campoOrder=Ranking&order=asc&paginacao=<?php echo($paginacao);?>"><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
-        <a href="Principal.php?campoOrder=Ranking&order=desc&paginacao=<?php echo($paginacao);?>"><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
+        <a href="Principal.php?campoOrder=Ranking&order=asc&ItensPorPagina=<?php echo($ItensPorPagina);?>"><i class="fa fa-caret-up  hidden" data-order="up"></i></a>
+        <a href="Principal.php?campoOrder=Ranking&order=desc&ItensPorPagina=<?php echo($ItensPorPagina);?>"><i class="fa fa-caret-down  hidden" data-order="down"></i></a> 
       </th>
       <th style="text-align:center">N° Interações</th>
     </tr>
   </thead>
   <tbody>
-  <?php foreach ($output as $ticket) { ?>
+  <?php foreach ($output as $ticket) { ?> <!-- Exibe os dados do array por pagina -->
     <tr>
       <th style="text-align:center"><?php echo($ticket->TicketID); ?></th>      
       <td style="text-align:center"><?php echo($ticket->CategoryID); ?></td>
@@ -120,7 +116,7 @@ $output = array_slice($objTickets, $dados[$pagina-1] , $paginacao);
 <div class="row">
 <div class="col-md-1">
 
-    <select class="form-control" id="paginas">
+    <select class="form-control" id="paginas"> <!-- Select com a quantidade por pagina -->
       <option value="5">5</option>
       <option value="10">10</option>
       <option value="15">15</option>
@@ -129,18 +125,18 @@ $output = array_slice($objTickets, $dados[$pagina-1] , $paginacao);
     </select>
 
   </div>
-  <div class="col">
-    <ul class="pagination">
-      <li class="page-item"><a class="page-link" href="Principal.php?pagina=<?php echo($pagina-1 > 0 ? $pagina-1 : 1);?>&paginacao=<?php echo($paginacao);?>"><<</a></li>
+  <div class="col"> 
+    <ul class="pagination">  <!-- Cria os links para as paginas -->
+      <li class="page-item"><a class="page-link" href="Principal.php?pagina=<?php echo($pagina-1 > 0 ? $pagina-1 : 1);?>&ItensPorPagina=<?php echo($ItensPorPagina);?>"><<</a></li>
         <?php for ($p = 1; $p <= $numPaginas; $p++){?>
-          <li class="page-item"><a class="page-link" href="Principal.php?pagina=<?php echo($p);?>&paginacao=<?php echo($paginacao);?>"> <?php echo($p);?> </a></li>
+          <li class="page-item"><a class="page-link" href="Principal.php?pagina=<?php echo($p);?>&ItensPorPagina=<?php echo($ItensPorPagina);?>"> <?php echo($p);?> </a></li>
         <?php }?>
-      <li class="page-item"><a class="page-link" href="Principal.php?pagina=<?php echo($pagina+1 > $numPaginas ? $numPaginas : $pagina+1);?>&paginacao=<?php echo($paginacao);?>">>></a></li>
+      <li class="page-item"><a class="page-link" href="Principal.php?pagina=<?php echo($pagina+1 > $numPaginas ? $numPaginas : $pagina+1);?>&ItensPorPagina=<?php echo($ItensPorPagina);?>">>></a></li>
     </ul>
   </div>
 </div>
 
-<input type="hidden" id="perPage" value="<?php echo($paginacao);?>">
+<input type="hidden" id="perPage" value="<?php echo($ItensPorPagina);?>"> <!-- Armazena a quantidade por pagina, para o JS acessar -->
 
 </body>
 

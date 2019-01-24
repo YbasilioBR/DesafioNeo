@@ -2,48 +2,44 @@
 
 function AcessaBase(){
 
-$url = '..\Dados\tickets.json';
-$data = file_get_contents($url);
-$tickets = json_decode($data);
+$url = '..\Dados\tickets.json'; //Acessa o arquivo tickets.json
+$data = file_get_contents($url); // Retira os dados
+$tickets = json_decode($data); //Passa os dados para o formato Json
 
 return($tickets);
 
 }
 
-function AtualizaDados(array $newTickets)
+function AtualizaDados(array $newTickets) //Método para acessar o arquivo atualizar com os novos dados recebidos no parametro $newTickets
 {
         $newTicketsJson = json_encode($newTickets, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
-
         $arquivo = "../Dados/tickets.json";
-
         $atualiza = fopen($arquivo, "w+");
-
         fwrite($atualiza, $newTicketsJson);
-
         fclose($atualiza);
 }
 
-function OrderBy($array,$key,$ascdesc) {
+function OrderBy($array,$key,$ascdesc) { //Serve para ordenar o array de acordo com o campo e o tipo de ordenação recebidos no parâmetro
 	
 	foreach($array as $k=>$v) {
-	   $b[] = $v[$key];
+	   $parcial[] = $v[$key];
 	}
         
         if($ascdesc == 'asc'){
-           asort($b);
+           asort($parcial);
         }else if($ascdesc == 'desc'){
-           arsort($b);
+           arsort($parcial);
         }
 	
-	foreach($b as $k=>$v) {
-           $c[] = $array[$k];
+	foreach($parcial as $k=>$v) {
+           $final[] = $array[$k];
 	}
 	
-        return $c;
+        return $final;
         
 }
 
-function objectToArray($d) {
+function objectToArray($d) { //Tranforma objeto em array (Para poder ordenar no método acima)
         if (is_object($d)) {
             $d = get_object_vars($d);
         }
